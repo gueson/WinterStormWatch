@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://weather-alert.example.com/sitemap.xml
