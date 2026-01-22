@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://winterstormwatch.online';
+  const baseUrl = 'https://www.winterstormwatch.online';
 
   return [
     {

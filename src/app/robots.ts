@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/api/',
     },
-    sitemap: 'https://winterstormwatch.online/sitemap.xml',
+    sitemap: 'https://www.winterstormwatch.online/sitemap.xml',
   };
 }

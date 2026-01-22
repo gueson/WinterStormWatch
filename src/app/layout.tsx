@@ -9,7 +9,7 @@ import { SkipLink } from '@/components/SkipLink';
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://winterstormwatch.online'),
+  metadataBase: new URL('https://www.winterstormwatch.online'),
   title: {
     default: 'US Winter Storm Alerts | Winter Storm Watch & Warning Updates',
     template: '%s | WinterStormWatch',
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://winterstormwatch.online',
+    url: 'https://www.winterstormwatch.online',
     siteName: 'WinterStormWatch',
     title: 'Winter Storm Watch | Real-Time US Ice Snow Storm Alerts & Weather Forecast',
     description: 'Real-time US winter storm alerts including watches, warnings, and advisories with official NWS details and safety guidelines.',
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
   alternates: {
-    canonical: 'https://winterstormwatch.online',
+    canonical: 'https://www.winterstormwatch.online',
   },
   category: 'Weather',
   icons: {
