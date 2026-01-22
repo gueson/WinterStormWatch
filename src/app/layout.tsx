@@ -14,15 +14,14 @@ export const metadata: Metadata = {
     default: 'US Winter Storm Alerts | Winter Storm Watch & Warning Updates',
     template: '%s | WinterStormWatch',
   },
-  description: 'Real-time winter storm watch and warning updates for the US. Get official NWS alerts, snow storm forecasts, and safety guidelines for major cities including Dallas, Chicago, and New York.',
+  description: 'Winter storm watch updates for the US: Get real-time snow storm alerts, weather forecasts and local ice storm warnings. Check active alerts for Dallas, San Antonio etc.',
   keywords: [
     'winter storm watch',
-    'winter storm warning',
+    'ice storm warning',
     'snow storm forecast',
-    'weather alerts',
-    'NWS alerts',
-    'snow storm warnings',
     'winter weather alerts',
+    'extreme cold watch',
+    'NWS alerts',
   ].join(', '),
   authors: [{ name: 'WinterStormWatch Team' }],
   creator: 'WinterStormWatch',
@@ -41,9 +40,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://weather-alert.example.com',
+    url: 'https://winterstormwatch.online',
     siteName: 'WinterStormWatch',
-    title: 'US Winter Storm Alerts | Winter Storm Watch & Warning Updates',
+    title: 'Winter Storm Watch | Real-Time US Ice Snow Storm Alerts & Weather Forecast',
     description: 'Real-time US winter storm alerts including watches, warnings, and advisories with official NWS details and safety guidelines.',
     images: [
       {
@@ -61,9 +60,14 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
   alternates: {
-    canonical: 'https://weather-alert.example.com',
+    canonical: 'https://winterstormwatch.online',
   },
   category: 'Weather',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
