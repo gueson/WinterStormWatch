@@ -29,6 +29,14 @@ export function Header() {
                 </li>
                 <li>
                   <Link
+                    href="/city-tools"
+                    className="text-gray-600 hover:text-gray-900 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-2 py-1"
+                  >
+                    City Winter Tools
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/guide"
                     className="text-gray-600 hover:text-gray-900 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-2 py-1"
                   >
