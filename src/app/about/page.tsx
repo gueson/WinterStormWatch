@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'About',
   description: 'Learn about WinterStormWatch - your source for real-time US winter storm alerts and safety information.',
   alternates: {
-    canonical: '/about',
+    canonical: 'https://www.winterstormwatch.online/about',
   },
 };
 

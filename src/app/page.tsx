@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: 'US Winter Storm Alerts | Real-time Winter Storm Watch & Warning Updates',
   description: 'Real-time US winter storm alerts including watches, warnings, and advisories. Covers major cities like Dallas, Chicago, and New York with official NWS details and safety guidelines.',
   alternates: {
-    canonical: '/',
+    canonical: 'https://www.winterstormwatch.online',
   },
 };
 

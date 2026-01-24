@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Winter Storm Safety Guide',
   description: 'Comprehensive winter storm safety guide including emergency preparation, travel safety tips, and essential supplies checklist.',
   alternates: {
-    canonical: '/guide',
+    canonical: 'https://www.winterstormwatch.online/guide',
   },
 };
 

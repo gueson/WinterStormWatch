@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Terms of Service',
   description: 'Terms of Service for WinterStormWatch website.',
   alternates: {
-    canonical: '/terms',
+    canonical: 'https://www.winterstormwatch.online/terms',
   },
 };
 

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Accessibility Statement',
   description: 'Our commitment to making WinterStormWatch accessible to all users, including those with disabilities.',
   alternates: {
-    canonical: '/accessibility',
+    canonical: 'https://www.winterstormwatch.online/accessibility',
   },
 };
 

@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
   alternates: {
-    canonical: '/city-tools',
+    canonical: 'https://www.winterstormwatch.online/city-tools',
   },
 };
 
