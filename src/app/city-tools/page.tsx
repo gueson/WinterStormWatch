@@ -1,11 +1,14 @@
 import { Metadata } from 'next';
-import { CitySelector } from '../../components/CitySelector';
-import { WeatherForecast } from '../../components/WeatherForecast';
-import { RoadConditions } from '../../components/RoadConditions';
-import { EmergencyContacts } from '../../components/EmergencyContacts';
-import { LocalTips } from '../../components/LocalTips';
+import dynamic from 'next/dynamic';
 import { CityProvider } from '../../components/CityContext';
 import { City, CITIES, DEFAULT_CITY } from '../../lib/city-data';
+
+// Lazy load components
+const CitySelector = dynamic(() => import('../../components/CitySelector').then((module) => ({ default: module.CitySelector })), { ssr: true });
+const WeatherForecast = dynamic(() => import('../../components/WeatherForecast').then((module) => ({ default: module.WeatherForecast })), { ssr: true });
+const RoadConditions = dynamic(() => import('../../components/RoadConditions').then((module) => ({ default: module.RoadConditions })), { ssr: true });
+const EmergencyContacts = dynamic(() => import('../../components/EmergencyContacts').then((module) => ({ default: module.EmergencyContacts })), { ssr: true });
+const LocalTips = dynamic(() => import('../../components/LocalTips').then((module) => ({ default: module.LocalTips })), { ssr: true });
 
 export const metadata: Metadata = {
   title: {

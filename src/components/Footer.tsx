@@ -42,6 +42,14 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/city-tools"
+                  className="text-sm hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
+                >
+                  City Winter Tools
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/guide"
                   className="text-sm hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
                 >

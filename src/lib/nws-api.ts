@@ -18,22 +18,18 @@ async function fetchFromNWS<T>(endpoint: string): Promise<T> {
         'User-Agent': USER_AGENT,
         'Accept': 'application/geo+json',
         'Accept-Charset': 'utf-8',
-        // NWS API requires proper Accept-Encoding
         'Accept-Encoding': 'gzip, deflate, br',
       },
-      // Only use revalidate for SSG, not cache: no-store for RSC
+      // Cache strategy: revalidate every 5 minutes
       next: { revalidate: 300 },
     };
 
-    console.log(`Fetching NWS API: ${NWS_API_BASE}${endpoint}`);
+    // Only log in development mode
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Fetching NWS API: ${NWS_API_BASE}${endpoint}`);
+    }
     
     const response = await fetch(`${NWS_API_BASE}${endpoint}`, options);
-    
-    // Log response status for debugging
-    console.log(`NWS API Response: ${response.status} ${response.statusText}`);
-    
-    // Log response headers for debugging
-    console.log('Response Headers:', Object.fromEntries(response.headers.entries()));
     
     if (!response.ok) {
       // Detailed error message based on status code
@@ -44,7 +40,9 @@ async function fetchFromNWS<T>(endpoint: string): Promise<T> {
         // Try to get more details from response
         try {
           const errorData = await response.json();
-          console.error('NWS API Error Details:', errorData);
+          if (process.env.NODE_ENV === 'development') {
+            console.error('NWS API Error Details:', errorData);
+          }
           errorMsg += ` - ${JSON.stringify(errorData)}`;
         } catch (e) {
           // Ignore if we can't parse error response
@@ -62,14 +60,21 @@ async function fetchFromNWS<T>(endpoint: string): Promise<T> {
     
     // Parse response
     const data = await response.json();
-    console.log('NWS API Data Received:', {
-      featuresCount: data.features?.length || 0,
-      updated: data.updated,
-    });
+    
+    // Only log in development mode
+    if (process.env.NODE_ENV === 'development') {
+      console.log('NWS API Data Received:', {
+        featuresCount: data.features?.length || 0,
+        updated: data.updated,
+      });
+    }
     
     return data;
   } catch (error) {
-    console.error('Detailed NWS API Error:', error);
+    // Only log in development mode
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Detailed NWS API Error:', error);
+    }
     throw error;
   }
 }

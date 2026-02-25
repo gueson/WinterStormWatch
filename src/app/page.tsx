@@ -3,13 +3,28 @@ import { mockWinterAlerts } from '@/lib/mock-data';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AlertBanner } from '@/components/AlertBanner';
-import { Stats } from '@/components/Stats';
-import { AlertList } from '@/components/AlertList';
+import dynamic from 'next/dynamic';
 import { Metadata } from 'next';
+import Script from 'next/script';
+
+// Lazy load heavy components
+const Stats = dynamic(() => import('@/components/Stats').then((module) => ({ default: module.Stats })), { ssr: true });
+const AlertList = dynamic(() => import('@/components/AlertList').then((module) => ({ default: module.AlertList })), { ssr: true });
 
 export const metadata: Metadata = {
   title: 'US Winter Storm Alerts | Real-time Winter Storm Watch & Warning Updates',
-  description: 'Real-time US winter storm alerts including watches, warnings, and advisories. Covers major cities like Dallas, Chicago, and New York with official NWS details and safety guidelines.',
+  description: 'Real-time US winter storm alerts including watches, warnings, and advisories. Covers all states with official NWS details, winter storm safety guidelines, and emergency preparedness tips for winter weather.',
+  keywords: [
+    'winter storm alerts',
+    'winter weather warnings',
+    'winter storm watch',
+    'US winter weather alerts',
+    'NWS winter alerts',
+    'winter storm safety guidelines',
+    'winter weather advisories',
+    'winter storm preparation',
+    'winter emergency supplies'
+  ],
   alternates: {
     canonical: 'https://www.winterstormwatch.online',
   },
@@ -52,8 +67,35 @@ export default async function Home() {
     timeZoneName: 'short',
   });
 
+  // Schema.org structured data
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WeatherForecast',
+    name: 'US Winter Storm Alerts',
+    description: 'Real-time US winter storm alerts including watches, warnings, and advisories issued by the National Weather Service (NWS).',
+    url: 'https://www.winterstormwatch.online',
+    provider: {
+      '@type': 'Organization',
+      name: 'WinterStormWatch',
+      url: 'https://www.winterstormwatch.online'
+    },
+    dateModified: new Date().toISOString(),
+    numberOfAlerts: winterAlerts.length,
+    statesAffected: statesAffected,
+    alertTypes: {
+      warnings: warnings,
+      watches: watches,
+      advisories: winterAlerts.length - warnings - watches
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      <Script
+        id="structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <Header />
 
       <main id="main-content" className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
@@ -81,10 +123,13 @@ export default async function Home() {
         <section aria-labelledby="alerts-heading">
           <div className="mb-8">
             <h1 id="alerts-heading" className="text-3xl font-bold text-gray-900 mb-2">
-              US Winter Storm Alerts
+              US Winter Storm Alerts & Weather Warnings
             </h1>
+            <p className="text-gray-600 mb-4">
+              Real-time monitoring of winter storm alerts, watches, and advisories issued by the National Weather Service (NWS) for all 50 states and U.S. territories.
+            </p>
             <p className="text-gray-600">
-              Real-time monitoring of winter storm alerts issued by the National Weather Service (NWS)
+              Stay informed about winter weather conditions with our comprehensive winter storm tracking system. Get up-to-date information on snow storms, ice storms, freezing rain, and other winter weather hazards. Our platform provides official NWS alerts with details on severity, urgency, and safety instructions.
             </p>
           </div>
 
