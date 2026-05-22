@@ -1,93 +1,213 @@
-import { getActiveAlerts, filterWinterAlerts, groupAlertsByState } from '@/lib/nws-api';
-import { mockWinterAlerts } from '@/lib/mock-data';
+'use client';
+
+import { filterAllAlerts, groupAlertsByState } from '@/lib/nws-api';
+import { mockAllAlerts } from '@/lib/mock-data';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AlertBanner } from '@/components/AlertBanner';
+import { WeatherAlert } from '@/types/weather';
 import dynamic from 'next/dynamic';
-import { Metadata } from 'next';
 import Script from 'next/script';
+import { useState, useEffect, useMemo } from 'react';
 
-// Lazy load heavy components
-const Stats = dynamic(() => import('@/components/Stats').then((module) => ({ default: module.Stats })), { ssr: true });
-const AlertList = dynamic(() => import('@/components/AlertList').then((module) => ({ default: module.AlertList })), { ssr: true });
+const Stats = dynamic(() => import('@/components/Stats').then((module) => ({ default: module.Stats })), { 
+  ssr: false,
+  loading: () => <div className="flex justify-center py-8"><div className="animate-pulse bg-gray-200 rounded-lg w-64 h-24"></div></div>
+});
+const AlertList = dynamic(() => import('@/components/AlertList').then((module) => ({ default: module.AlertList })), { 
+  ssr: false,
+  loading: () => <div className="flex justify-center py-8"><div className="animate-pulse bg-gray-200 rounded-lg w-full h-48"></div></div>
+});
 
-export const metadata: Metadata = {
-  title: 'US Winter Storm Alerts | Real-time Winter Storm Watch & Warning Updates',
-  description: 'Real-time US winter storm alerts including watches, warnings, and advisories. Covers all states with official NWS details, winter storm safety guidelines, and emergency preparedness tips for winter weather.',
-  keywords: [
-    'winter storm alerts',
-    'winter weather warnings',
-    'winter storm watch',
-    'US winter weather alerts',
-    'NWS winter alerts',
-    'winter storm safety guidelines',
-    'winter weather advisories',
-    'winter storm preparation',
-    'winter emergency supplies'
-  ],
-  alternates: {
-    canonical: 'https://www.winterstormwatch.online',
-  },
+const STATE_ABBREVIATIONS: Record<string, string> = {
+  'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+  'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+  'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+  'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+  'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+  'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+  'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+  'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+  'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+  'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming',
 };
 
-export const revalidate = 300;
-
-export default async function Home() {
-  let winterAlerts = [];
-  let dataSource: 'nws-api' | 'mock-data' = 'nws-api';
-  
-  try {
-    // Try to fetch real data from NWS API
-    const allAlerts = await getActiveAlerts();
-    winterAlerts = filterWinterAlerts(allAlerts);
-    
-    // If no real alerts, use mock data for better user experience
-    if (winterAlerts.length === 0) {
-      winterAlerts = mockWinterAlerts;
-      dataSource = 'mock-data';
-    }
-  } catch (error) {
-    console.error('Failed to fetch real NWS data, falling back to mock data:', error);
-    // Fallback to mock data if API fails
-    winterAlerts = mockWinterAlerts;
-    dataSource = 'mock-data';
+function extractState(areaDesc: string): string {
+  const stateMatch = areaDesc.match(/\b([A-Z]{2})\b(?!.*[A-Z]{2})/);
+  if (stateMatch) {
+    const stateAbbr = stateMatch[1];
+    return STATE_ABBREVIATIONS[stateAbbr] || stateAbbr;
   }
-  
-  const groupedAlerts = groupAlertsByState(winterAlerts);
-  const statesAffected = Object.keys(groupedAlerts).length;
+  return 'Unknown';
+}
 
-  const warnings = winterAlerts.filter((a) => a.properties.event.includes('Warning')).length;
-  const watches = winterAlerts.filter((a) => a.properties.event.includes('Watch')).length;
-
-  const lastUpdated = new Date().toLocaleString('en-US', {
+function formatDate(dateString: string): string {
+  return new Date(dateString).toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
     timeZoneName: 'short',
   });
+}
 
-  // Schema.org structured data
-  const structuredData = {
+export default function Home() {
+  const [allAlertsData, setAllAlertsData] = useState<WeatherAlert[]>([]);
+  const [dataSource, setDataSource] = useState<'nws-api' | 'mock-data'>('nws-api');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const CACHE_KEY = 'weather_alerts_cache';
+    const CACHE_TTL = 5 * 60 * 1000;
+    
+    const fetchAlerts = async () => {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const cacheData = JSON.parse(cached);
+        if (Date.now() - cacheData.timestamp < CACHE_TTL) {
+          setAllAlertsData(cacheData.data);
+          setDataSource('nws-api');
+          setIsLoading(false);
+          return;
+        }
+      }
+      
+      const NWS_API_BASE = 'https://api.weather.gov';
+      const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 WeatherAlert/1.0';
+      
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        
+        const response = await fetch(`${NWS_API_BASE}/alerts/active`, {
+          headers: {
+            'User-Agent': USER_AGENT,
+            'Accept': 'application/geo+json',
+          },
+          signal: controller.signal,
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.features && data.features.length > 0) {
+          const alerts = filterAllAlerts(data.features);
+          setAllAlertsData(alerts);
+          setDataSource('nws-api');
+          localStorage.setItem(CACHE_KEY, JSON.stringify({
+            data: alerts,
+            timestamp: Date.now()
+          }));
+        } else {
+          setAllAlertsData(mockAllAlerts);
+          setDataSource('mock-data');
+        }
+      } catch {
+        setError('Failed to fetch real-time data');
+        setAllAlertsData(mockAllAlerts);
+        setDataSource('mock-data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchAlerts();
+  }, []);
+  
+  const computedData = useMemo(() => {
+    const groupedAlerts = groupAlertsByState(allAlertsData);
+    const statesAffected = Object.keys(groupedAlerts).length;
+    const warnings = allAlertsData.filter((a) => a.properties.event.includes('Warning')).length;
+    const watches = allAlertsData.filter((a) => a.properties.event.includes('Watch')).length;
+    
+    return {
+      groupedAlerts,
+      statesAffected,
+      warnings,
+      watches,
+      lastUpdated: formatDate(new Date().toISOString()),
+      processedAlerts: allAlertsData.map((alert) => ({
+        id: alert.id,
+        event: alert.properties.event,
+        areaDesc: alert.properties.areaDesc,
+        severity: alert.properties.severity,
+        urgency: alert.properties.urgency,
+        certainty: alert.properties.certainty,
+        effective: alert.properties.effective,
+        expires: alert.properties.expires,
+        description: alert.properties.description,
+        instruction: alert.properties.instruction,
+        url: alert.properties.url,
+        headline: alert.properties.headline,
+        senderName: alert.properties.senderName,
+        state: extractState(alert.properties.areaDesc),
+      }))
+    };
+  }, [allAlertsData]);
+
+  const structuredData = useMemo(() => ({
     '@context': 'https://schema.org',
-    '@type': 'WeatherForecast',
-    name: 'US Winter Storm Alerts',
-    description: 'Real-time US winter storm alerts including watches, warnings, and advisories issued by the National Weather Service (NWS).',
+    '@type': 'Organization',
+    name: 'WeatherAlert',
+    description: 'Real-time US weather alerts including watches, warnings, and advisories for all seasonal hazards.',
     url: 'https://www.winterstormwatch.online',
-    provider: {
-      '@type': 'Organization',
-      name: 'WinterStormWatch',
-      url: 'https://www.winterstormwatch.online'
+    logo: 'https://www.winterstormwatch.online/icon.svg',
+    sameAs: [],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'support@winterstormwatch.online',
+      contactType: 'customer support',
     },
-    dateModified: new Date().toISOString(),
-    numberOfAlerts: winterAlerts.length,
-    statesAffected: statesAffected,
-    alertTypes: {
-      warnings: warnings,
-      watches: watches,
-      advisories: winterAlerts.length - warnings - watches
-    }
-  };
+    mainEntity: {
+      '@type': 'WeatherService',
+      name: 'US Weather Alerts',
+      description: 'Real-time monitoring of weather alerts from the National Weather Service',
+      provider: {
+        '@type': 'Organization',
+        name: 'WeatherAlert',
+      },
+      hasWeatherForecast: {
+        '@type': 'WeatherForecast',
+        numberOfAlerts: allAlertsData.length,
+        statesAffected: computedData.statesAffected,
+        dateModified: new Date().toISOString(),
+      },
+    },
+  }), [allAlertsData, computedData.statesAffected]);
+
+  const breadcrumbData = useMemo(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.winterstormwatch.online',
+      },
+    ],
+  }), []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gray-50">
+        <Header />
+        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+          <div className="flex flex-col items-center justify-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+            <p className="text-gray-600">Loading weather alerts...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -95,11 +215,17 @@ export default async function Home() {
         id="structured-data"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        strategy="afterInteractive"
+      />
+      <Script
+        id="breadcrumb-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+        strategy="afterInteractive"
       />
       <Header />
 
       <main id="main-content" className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        {/* Data Source Indicator - Accessible for screen readers */}
         <div className="mb-4 text-right">
           <span 
             className="inline-flex items-center text-xs font-medium px-3 py-1 rounded-full bg-blue-100 text-blue-800"
@@ -120,47 +246,38 @@ export default async function Home() {
           </span>
         </div>
         
+        {error && (
+          <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p className="text-yellow-800 text-sm">⚠️ {error}</p>
+          </div>
+        )}
+
         <section aria-labelledby="alerts-heading">
           <div className="mb-8">
             <h1 id="alerts-heading" className="text-3xl font-bold text-gray-900 mb-2">
-              US Winter Storm Alerts & Weather Warnings
+              US Weather Alerts & Seasonal Hazard Updates
             </h1>
             <p className="text-gray-600 mb-4">
-              Real-time monitoring of winter storm alerts, watches, and advisories issued by the National Weather Service (NWS) for all 50 states and U.S. territories.
+              Real-time monitoring of all weather alerts, watches, and advisories issued by the National Weather Service (NWS) for all 50 states and U.S. territories.
             </p>
             <p className="text-gray-600">
-              Stay informed about winter weather conditions with our comprehensive winter storm tracking system. Get up-to-date information on snow storms, ice storms, freezing rain, and other winter weather hazards. Our platform provides official NWS alerts with details on severity, urgency, and safety instructions.
+              Stay informed about seasonal weather conditions throughout the year with our comprehensive weather alert tracking system.
             </p>
           </div>
 
-          <AlertBanner alertCount={winterAlerts.length} lastUpdated={lastUpdated} />
+          <AlertBanner alertCount={allAlertsData.length} lastUpdated={computedData.lastUpdated} />
 
-          {winterAlerts.length > 0 && (
+          {allAlertsData.length > 0 && (
             <Stats
-              totalAlerts={winterAlerts.length}
-              statesAffected={statesAffected}
-              warnings={warnings}
-              watches={watches}
+              totalAlerts={allAlertsData.length}
+              statesAffected={computedData.statesAffected}
+              warnings={computedData.warnings}
+              watches={computedData.watches}
             />
           )}
 
           <AlertList
-            alerts={winterAlerts.map((alert) => ({
-              id: alert.id,
-              event: alert.properties.event,
-              areaDesc: alert.properties.areaDesc,
-              severity: alert.properties.severity,
-              urgency: alert.properties.urgency,
-              certainty: alert.properties.certainty,
-              effective: alert.properties.effective,
-              expires: alert.properties.expires,
-              description: alert.properties.description,
-              instruction: alert.properties.instruction,
-              url: alert.properties.url,
-              headline: alert.properties.headline,
-              senderName: alert.properties.senderName,
-              state: extractState(alert.properties.areaDesc),
-            }))}
+            alerts={computedData.processedAlerts}
             dataSource={dataSource}
           />
         </section>
@@ -202,73 +319,4 @@ export default async function Home() {
       <Footer />
     </div>
   );
-}
-
-// State abbreviation to full name mapping
-const STATE_ABBREVIATIONS: Record<string, string> = {
-  'AL': 'Alabama',
-  'AK': 'Alaska',
-  'AZ': 'Arizona',
-  'AR': 'Arkansas',
-  'CA': 'California',
-  'CO': 'Colorado',
-  'CT': 'Connecticut',
-  'DE': 'Delaware',
-  'FL': 'Florida',
-  'GA': 'Georgia',
-  'HI': 'Hawaii',
-  'ID': 'Idaho',
-  'IL': 'Illinois',
-  'IN': 'Indiana',
-  'IA': 'Iowa',
-  'KS': 'Kansas',
-  'KY': 'Kentucky',
-  'LA': 'Louisiana',
-  'ME': 'Maine',
-  'MD': 'Maryland',
-  'MA': 'Massachusetts',
-  'MI': 'Michigan',
-  'MN': 'Minnesota',
-  'MS': 'Mississippi',
-  'MO': 'Missouri',
-  'MT': 'Montana',
-  'NE': 'Nebraska',
-  'NV': 'Nevada',
-  'NH': 'New Hampshire',
-  'NJ': 'New Jersey',
-  'NM': 'New Mexico',
-  'NY': 'New York',
-  'NC': 'North Carolina',
-  'ND': 'North Dakota',
-  'OH': 'Ohio',
-  'OK': 'Oklahoma',
-  'OR': 'Oregon',
-  'PA': 'Pennsylvania',
-  'RI': 'Rhode Island',
-  'SC': 'South Carolina',
-  'SD': 'South Dakota',
-  'TN': 'Tennessee',
-  'TX': 'Texas',
-  'UT': 'Utah',
-  'VT': 'Vermont',
-  'VA': 'Virginia',
-  'WA': 'Washington',
-  'WV': 'West Virginia',
-  'WI': 'Wisconsin',
-  'WY': 'Wyoming',
-  'DC': 'District of Columbia',
-  'PR': 'Puerto Rico',
-  'VI': 'Virgin Islands',
-  'GU': 'Guam',
-  'MP': 'Northern Mariana Islands',
-  'AS': 'American Samoa'
-};
-
-function extractState(areaDesc: string): string {
-  const stateMatch = areaDesc.match(/([A-Z]{2})\s*$/);
-  if (stateMatch) {
-    const abbreviation = stateMatch[1];
-    return STATE_ABBREVIATIONS[abbreviation] || abbreviation;
-  }
-  return 'Unknown State';
 }

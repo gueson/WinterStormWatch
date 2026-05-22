@@ -9,12 +9,12 @@ export function Header() {
             <Link
               href="/"
               className="flex items-center gap-3 text-gray-900 hover:text-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded p-2"
-              aria-label="Winter Storm Watch - Home"
+              aria-label="Weather Alert - Home"
             >
               <div className="w-12 h-10 bg-blue-600 text-white font-bold text-center flex items-center justify-center rounded">
-                WSW
+                WA
               </div>
-              <span className="text-xl font-bold">winterstormwatch</span>
+              <span className="text-xl font-bold">WeatherAlert</span>
             </Link>
 
             <nav aria-label="Main navigation">
@@ -32,7 +32,7 @@ export function Header() {
                     href="/city-tools"
                     className="text-gray-600 hover:text-gray-900 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-2 py-1"
                   >
-                    City Winter Tools
+                    City Weather Tools
                   </Link>
                 </li>
                 <li>

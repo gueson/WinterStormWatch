@@ -3,10 +3,16 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'Winter Storm Safety Guide',
-  description: 'Comprehensive winter storm safety guide including emergency preparation, travel safety tips, and essential supplies checklist.',
+  title: 'Weather Safety Guide | Seasonal Hazard Preparedness Tips',
+  description: 'Comprehensive weather safety guide including emergency preparation, travel safety tips, and essential supplies checklist for all seasonal hazards.',
+  keywords: ['weather safety guide', 'emergency preparedness', 'seasonal hazards', 'storm safety', 'weather tips'],
   alternates: {
     canonical: 'https://www.winterstormwatch.online/guide',
+  },
+  openGraph: {
+    title: 'Weather Safety Guide',
+    description: 'Comprehensive weather safety guide for all seasonal hazards.',
+    url: 'https://www.winterstormwatch.online/guide',
   },
 };
 
@@ -19,10 +25,10 @@ export default function GuidePage() {
         <article className="prose prose-lg max-w-none">
           <header className="mb-12 not-prose">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Winter Storm Safety Guide
+              Weather Safety Guide
             </h1>
             <p className="text-xl text-gray-600">
-              Essential information to help you prepare for and respond to winter storms.
+              Essential information to help you prepare for and respond to seasonal weather hazards.
             </p>
           </header>
 
@@ -105,7 +111,7 @@ export default function GuidePage() {
               <div className="bg-red-50 border-l-4 border-red-500 p-4">
                 <h3 className="font-semibold text-red-900 mb-2">Stay Indoors</h3>
                 <p className="text-red-800">
-                  The safest place during a winter storm is indoors. Minimize travel and avoid going outside unless absolutely necessary.
+                  The safest place during severe weather is indoors. Minimize travel and avoid going outside unless absolutely necessary.
                 </p>
               </div>
 
@@ -141,7 +147,7 @@ export default function GuidePage() {
                 <ul className="space-y-2 text-gray-700">
                   <li>• Check for downed power lines</li>
                   <li>• Inspect your home for damage</li>
-                  <li>• Use caution when clearing snow</li>
+                  <li>• Use caution when clearing debris</li>
                   <li>• Check on neighbors, especially elderly</li>
                 </ul>
               </div>

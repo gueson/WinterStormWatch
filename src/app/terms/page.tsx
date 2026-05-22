@@ -3,8 +3,9 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service',
-  description: 'Terms of Service for WinterStormWatch website.',
+  title: 'Terms of Service | WeatherAlert',
+  description: 'Terms of Service for using WeatherAlert website and services.',
+  keywords: ['terms of service', 'terms and conditions', 'website terms', 'service agreement'],
   alternates: {
     canonical: 'https://www.winterstormwatch.online/terms',
   },
@@ -29,14 +30,14 @@ export default function TermsPage() {
           <section className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Acceptance of Terms</h2>
             <p className="text-gray-700 mb-4">
-              By accessing and using WinterStormWatch, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our website.
+              By accessing and using WeatherAlert, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our website.
             </p>
           </section>
 
           <section className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Use of Services</h2>
             <p className="text-gray-700 mb-4">
-              WinterStormWatch provides real-time weather alert information for educational and informational purposes. You agree to:
+              WeatherAlert provides real-time weather alert information for educational and informational purposes. You agree to:
             </p>
             <ul className="list-disc pl-6 text-gray-700 space-y-2">
               <li>Use the website only for lawful purposes</li>
@@ -54,7 +55,7 @@ export default function TermsPage() {
               </p>
             </div>
             <p className="text-gray-700 mb-4">
-              WinterStormWatch provides weather information &quot;as is&quot; without any warranty of any kind. We do not warrant that:
+              WeatherAlert provides weather information &quot;as is&quot; without any warranty of any kind. We do not warrant that:
             </p>
             <ul className="list-disc pl-6 text-gray-700 space-y-2">
               <li>The information will be accurate, complete, or current</li>
@@ -67,7 +68,7 @@ export default function TermsPage() {
           <section className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Limitation of Liability</h2>
             <p className="text-gray-700 mb-4">
-              To the maximum extent permitted by law, WinterStormWatch shall not be liable for any:
+              To the maximum extent permitted by law, WeatherAlert shall not be liable for any:
             </p>
             <ul className="list-disc pl-6 text-gray-700 space-y-2">
               <li>Direct, indirect, incidental, or consequential damages</li>
@@ -93,7 +94,7 @@ export default function TermsPage() {
           <section className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Intellectual Property</h2>
             <p className="text-gray-700 mb-4">
-              All content on this website, including text, graphics, logos, and images, is the property of WinterStormWatch or its content providers and is protected by copyright laws.
+              All content on this website, including text, graphics, logos, and images, is the property of WeatherAlert or its content providers and is protected by copyright laws.
             </p>
             <p className="text-gray-700">
               Weather data from the NWS is in the public domain and may be used in accordance with NWS guidelines.

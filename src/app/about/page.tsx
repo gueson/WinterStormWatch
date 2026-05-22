@@ -3,10 +3,16 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'About',
-  description: 'Learn about WinterStormWatch - your source for real-time US winter storm alerts and safety information.',
+  title: 'About WeatherAlert | US Weather Alerts & Safety Information',
+  description: 'Learn about WeatherAlert - your trusted source for real-time US weather alerts, watches, warnings, and seasonal hazard updates from the National Weather Service.',
+  keywords: ['about WeatherAlert', 'weather alerts', 'NWS alerts', 'weather safety', 'National Weather Service'],
   alternates: {
     canonical: 'https://www.winterstormwatch.online/about',
+  },
+  openGraph: {
+    title: 'About WeatherAlert',
+    description: 'Learn about WeatherAlert - your trusted source for real-time US weather alerts.',
+    url: 'https://www.winterstormwatch.online/about',
   },
 };
 
@@ -19,20 +25,20 @@ export default function AboutPage() {
         <article className="prose prose-lg max-w-none">
           <header className="mb-12 not-prose">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              About WinterStormWatch
+              About WeatherAlert
             </h1>
             <p className="text-xl text-gray-600">
-              Your trusted source for real-time winter storm alerts and safety information.
+              Your trusted source for real-time weather alerts and safety information.
             </p>
           </header>
 
           <section className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
             <p className="text-gray-700 mb-4">
-              WinterStormWatch was created to provide timely, accurate, and accessible information about winter storm conditions across the United States. We believe that everyone deserves access to critical weather information that can help protect lives and property.
+              WeatherAlert was created to provide timely, accurate, and accessible information about weather conditions across the United States. We believe that everyone deserves access to critical weather information that can help protect lives and property.
             </p>
             <p className="text-gray-700">
-              By aggregating data from the National Weather Service (NWS) and presenting it in a clear, user-friendly format, we aim to help communities stay safe during severe winter weather events.
+              By aggregating data from the National Weather Service (NWS) and presenting it in a clear, user-friendly format, we aim to help communities stay safe during severe weather events throughout the year.
             </p>
           </section>
 
@@ -46,7 +52,7 @@ export default function AboutPage() {
           <section className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Technology</h2>
             <p className="text-gray-700 mb-4">
-              WinterStormWatch is built with modern web technologies to ensure fast, reliable, and accessible access to weather information:
+              WeatherAlert is built with modern web technologies to ensure fast, reliable, and accessible access to weather information:
             </p>
             <ul className="space-y-2 text-gray-700">
               <li>• <strong>Next.js</strong> - Server-side rendering for optimal performance and SEO</li>

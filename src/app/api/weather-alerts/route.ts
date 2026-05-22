@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server';
-import { getActiveAlerts, filterWinterAlerts } from '@/lib/nws-api';
+import { getActiveAlerts, filterAllAlerts } from '@/lib/nws-api';
 
 export async function GET() {
   try {
+    console.log('API route: Fetching alerts from NWS...');
     const allAlerts = await getActiveAlerts();
-    const winterAlerts = filterWinterAlerts(allAlerts);
+    console.log(`API route: Raw alerts count: ${allAlerts?.length || 0}`);
+    
+    const allAlertsData = filterAllAlerts(allAlerts);
+    console.log(`API route: Filtered alerts count: ${allAlertsData?.length || 0}`);
 
-    const alertsWithMetadata = winterAlerts.map((alert) => ({
+    const alertsWithMetadata = allAlertsData.map((alert) => ({
       id: alert.id,
       event: alert.properties.event,
       areaDesc: alert.properties.areaDesc,
@@ -25,7 +29,7 @@ export async function GET() {
 
     return NextResponse.json(alertsWithMetadata, {
       headers: {
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        'Cache-Control': 'no-store, max-age=0',
       },
     });
   } catch (error) {

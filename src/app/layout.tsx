@@ -6,26 +6,33 @@ import './globals.css';
 import { CookieConsent } from '@/components/CookieConsent';
 import { SkipLink } from '@/components/SkipLink';
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' });
+const inter = Inter({ 
+  subsets: ['latin'], 
+  display: 'swap',
+  preload: true,
+  weight: ['400', '500', '600'],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.winterstormwatch.online'),
   title: {
-    default: 'US Winter Storm Alerts | Winter Storm Watch & Warning Updates',
-    template: '%s | WinterStormWatch',
+    default: 'US Weather Alerts & Seasonal Hazard Updates | WeatherAlert',
+    template: '%s | WeatherAlert',
   },
-  description: 'Winter storm watch updates for the US: Get real-time snow storm alerts, weather forecasts and local ice storm warnings. Check active alerts for Dallas, San Antonio etc.',
+  description: 'Real-time US weather alerts including warnings, and advisories for all seasonal hazards. Monitor weather conditions across all 50 states with official NWS data.',
   keywords: [
-    'winter storm watch',
-    'ice storm warning',
-    'snow storm forecast',
-    'winter weather alerts',
-    'extreme cold watch',
+    'weather alerts',
+    'seasonal hazards',
     'NWS alerts',
-  ].join(', '),
-  authors: [{ name: 'WinterStormWatch Team' }],
-  creator: 'WinterStormWatch',
-  publisher: 'WinterStormWatch',
+    'storm warnings',
+    'weather watch',
+    'US weather',
+    'weather advisory',
+    'National Weather Service',
+  ],
+  authors: [{ name: 'WeatherAlert Team' }],
+  creator: 'WeatherAlert',
+  publisher: 'WeatherAlert',
   robots: {
     index: true,
     follow: true,
@@ -41,32 +48,51 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://www.winterstormwatch.online',
-    siteName: 'WinterStormWatch',
-    title: 'Winter Storm Watch | Real-Time US Ice Snow Storm Alerts & Weather Forecast',
-    description: 'Real-time US winter storm alerts including watches, warnings, and advisories with official NWS details and safety guidelines.',
+    siteName: 'WeatherAlert',
+    title: 'US Weather Alerts & Seasonal Hazard Updates',
+    description: 'Real-time US weather alerts including watches, warnings, and advisories with official NWS data.',
     images: [
       {
-        url: '/og-image.png',
+        url: 'https://www.winterstormwatch.online/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'WinterStormWatch - US Winter Storm Warnings',
+        alt: 'WeatherAlert - Real-time US Weather Alerts and Seasonal Hazard Updates',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'US Winter Storm Alerts',
-    description: 'Real-time US winter storm alerts including watches, warnings, and advisories from the National Weather Service.',
-    images: ['/og-image.png'],
+    site: '@WeatherAlert',
+    creator: '@WeatherAlert',
+    title: 'US Weather Alerts & Seasonal Hazard Updates',
+    description: 'Real-time US weather alerts from the National Weather Service.',
+    images: ['https://www.winterstormwatch.online/og-image.png'],
   },
   alternates: {
     canonical: 'https://www.winterstormwatch.online',
+    languages: {
+      'en': 'https://www.winterstormwatch.online',
+    },
   },
   category: 'Weather',
   icons: {
-    icon: '/icon.svg',
+    icon: {
+      url: '/icon.svg',
+      type: 'image/svg+xml',
+      sizes: 'any',
+    },
     shortcut: '/icon.svg',
-    apple: '/icon.svg',
+    apple: {
+      url: '/icon.svg',
+      sizes: '180x180',
+    },
+  },
+  themeColor: '#3B82F6',
+  applicationName: 'WeatherAlert',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
   },
 };
 
@@ -76,15 +102,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en-US" className="scroll-smooth">
       <head>
-        <link rel="preconnect" href="https://api.weather.gov" />
+        <link rel="preconnect" href="https://api.weather.gov" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.weather.gov" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <meta name="theme-color" content="#3B82F6" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-NZ4L07HBD1"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}

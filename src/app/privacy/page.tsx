@@ -3,8 +3,9 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy',
-  description: 'Our privacy policy explains how we collect, use, and protect your personal information.',
+  title: 'Privacy Policy | WeatherAlert',
+  description: 'Our privacy policy explains how we collect, use, and protect your personal information when using WeatherAlert.',
+  keywords: ['privacy policy', 'data protection', 'GDPR', 'CCPA', 'privacy rights'],
   alternates: {
     canonical: 'https://www.winterstormwatch.online/privacy',
   },
@@ -29,7 +30,7 @@ export default function PrivacyPage() {
           <section className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Introduction</h2>
             <p className="text-gray-700 mb-4">
-              At WinterStormWatch, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your information when you use our website. By using WinterStormWatch, you agree to the collection and use of information in accordance with this policy.
+              At WeatherAlert, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your information when you use our website. By using WeatherAlert, you agree to the collection and use of information in accordance with this policy.
             </p>
           </section>
 

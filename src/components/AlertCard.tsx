@@ -1,3 +1,5 @@
+import { memo, ReactNode } from 'react';
+
 interface AlertCardProps {
   id: string;
   event: string;
@@ -13,7 +15,7 @@ interface AlertCardProps {
   state: string;
 }
 
-export function AlertCard({
+function AlertCardComponent({
   id,
   event,
   areaDesc,
@@ -26,7 +28,7 @@ export function AlertCard({
   url,
   headline,
   state,
-}: AlertCardProps) {
+}: AlertCardProps): ReactNode {
   const alertType = getAlertType(event);
   const severityColor = getSeverityColor(severity);
 
@@ -128,6 +130,8 @@ export function AlertCard({
     </article>
   );
 }
+
+export const AlertCard = memo(AlertCardComponent);
 
 function getAlertType(event: string): 'Watch' | 'Warning' | 'Advisory' {
   if (event.includes('Warning')) return 'Warning';

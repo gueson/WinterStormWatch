@@ -1,3 +1,5 @@
+import { memo, ReactNode } from 'react';
+
 interface StatsProps {
   totalAlerts: number;
   statesAffected: number;
@@ -5,7 +7,7 @@ interface StatsProps {
   watches: number;
 }
 
-export function Stats({ totalAlerts, statesAffected, warnings, watches }: StatsProps) {
+function StatsComponent({ totalAlerts, statesAffected, warnings, watches }: StatsProps): ReactNode {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" role="region" aria-label="Alert statistics">
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
@@ -27,3 +29,5 @@ export function Stats({ totalAlerts, statesAffected, warnings, watches }: StatsP
     </div>
   );
 }
+
+export const Stats = memo(StatsComponent);

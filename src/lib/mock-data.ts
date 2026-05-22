@@ -1,10 +1,10 @@
 import { WeatherAlert } from '@/types/weather';
 
-// Mock winter storm alerts data
+// Mock weather alerts data for all seasons
 // This data is used when NWS API is unavailable
-// Generated based on typical winter storm patterns in the US
+// Includes winter storms, hurricanes, floods, wildfires, and severe thunderstorms
 
-export const mockWinterAlerts: WeatherAlert[] = [
+export const mockAllAlerts: WeatherAlert[] = [
   {
     id: 'mock-1',
     type: 'Feature',
@@ -257,22 +257,237 @@ export const mockWinterAlerts: WeatherAlert[] = [
       ],
     },
   },
+  // Hurricane example
+  {
+    id: 'mock-hurricane-1',
+    type: 'Feature',
+    properties: {
+      '@id': 'https://api.weather.gov/alerts/mock-hurricane-1',
+      '@type': 'wx:Alert',
+      id: 'mock-hurricane-1',
+      areaDesc: 'Miami-Dade, Broward, Palm Beach, Monroe, FL',
+      category: 'Met',
+      response: 'Evacuate',
+      severity: 'Extreme',
+      urgency: 'Immediate',
+      event: 'Hurricane Warning',
+      sender: 'W-NWS-NWSTG-6',
+      senderName: 'NWS Miami FL',
+      headline: 'Hurricane Warning for South Florida',
+      description: 'A major hurricane is approaching South Florida. Sustained winds of 115 mph with gusts to 135 mph are expected. Storm surge of 6-8 feet above ground level is forecast for coastal areas.',
+      instruction: 'Evacuate immediately if you are in a mandatory evacuation zone. Secure your home and move to higher ground. Follow local emergency management instructions.',
+      messageType: 'Alert',
+      certainty: 'Likely',
+      url: 'https://weather.gov/mfl/hurricane',
+      effective: new Date(Date.now()).toISOString(),
+      onset: new Date(Date.now() + 10800000).toISOString(),
+      expires: new Date(Date.now() + 172800000).toISOString(),
+      sent: new Date(Date.now()).toISOString(),
+      status: 'Actual',
+      notification: 'NWS',
+      references: [],
+    },
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-81.999, 25.383],
+          [-80.823, 25.383],
+          [-80.823, 26.253],
+          [-81.999, 26.253],
+          [-81.999, 25.383],
+        ],
+      ],
+    },
+  },
+  // Flood example
+  {
+    id: 'mock-flood-1',
+    type: 'Feature',
+    properties: {
+      '@id': 'https://api.weather.gov/alerts/mock-flood-1',
+      '@type': 'wx:Alert',
+      id: 'mock-flood-1',
+      areaDesc: 'St. Louis, St. Louis County, Jefferson, Franklin, MO',
+      category: 'Met',
+      response: 'Evacuate',
+      severity: 'Severe',
+      urgency: 'Immediate',
+      event: 'Flash Flood Warning',
+      sender: 'W-NWS-NWSTG-5',
+      senderName: 'NWS St. Louis MO',
+      headline: 'Flash Flood Warning for St. Louis Metro',
+      description: 'Flash flooding is occurring in the St. Louis area due to heavy thunderstorms. Multiple roads are impassable due to high water. Several inches of rain have fallen in a short period of time.',
+      instruction: 'Move to higher ground immediately if you are in a flood-prone area. Do not attempt to drive through flooded roads. Turn around, dont drown.',
+      messageType: 'Alert',
+      certainty: 'Observed',
+      url: 'https://weather.gov/lsx/flood',
+      effective: new Date(Date.now() - 3600000).toISOString(),
+      onset: new Date(Date.now() - 1800000).toISOString(),
+      expires: new Date(Date.now() + 7200000).toISOString(),
+      sent: new Date(Date.now() - 3600000).toISOString(),
+      status: 'Actual',
+      notification: 'NWS',
+      references: [],
+    },
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-90.319, 38.414],
+          [-90.107, 38.414],
+          [-90.107, 38.676],
+          [-90.319, 38.676],
+          [-90.319, 38.414],
+        ],
+      ],
+    },
+  },
+  // Wildfire example
+  {
+    id: 'mock-wildfire-1',
+    type: 'Feature',
+    properties: {
+      '@id': 'https://api.weather.gov/alerts/mock-wildfire-1',
+      '@type': 'wx:Alert',
+      id: 'mock-wildfire-1',
+      areaDesc: 'Los Angeles, Ventura, San Bernardino, Riverside, CA',
+      category: 'Fire',
+      response: 'Evacuate',
+      severity: 'Severe',
+      urgency: 'Immediate',
+      event: 'Wildfire Warning',
+      sender: 'W-NWS-NWSTG-18',
+      senderName: 'NWS Los Angeles CA',
+      headline: 'Wildfire Warning for Southern California',
+      description: 'A large wildfire is burning out of control in Southern California. Strong Santa Ana winds are contributing to rapid fire spread. Thousands of acres have already burned and multiple structures are threatened.',
+      instruction: 'Evacuate immediately if ordered by authorities. Close all windows and doors, and turn off gas appliances if you have time. Check with local emergency management for evacuation routes.',
+      messageType: 'Alert',
+      certainty: 'Observed',
+      url: 'https://weather.gov/lox/wildfire',
+      effective: new Date(Date.now() - 7200000).toISOString(),
+      onset: new Date(Date.now() - 5400000).toISOString(),
+      expires: new Date(Date.now() + 86400000).toISOString(),
+      sent: new Date(Date.now() - 7200000).toISOString(),
+      status: 'Actual',
+      notification: 'NWS',
+      references: [],
+    },
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-118.945, 33.704],
+          [-117.689, 33.704],
+          [-117.689, 34.386],
+          [-118.945, 34.386],
+          [-118.945, 33.704],
+        ],
+      ],
+    },
+  },
+  // Severe Thunderstorm example
+  {
+    id: 'mock-thunderstorm-1',
+    type: 'Feature',
+    properties: {
+      '@id': 'https://api.weather.gov/alerts/mock-thunderstorm-1',
+      '@type': 'wx:Alert',
+      id: 'mock-thunderstorm-1',
+      areaDesc: 'Dallas, Tarrant, Collin, Denton, TX',
+      category: 'Met',
+      response: 'Prepare',
+      severity: 'Severe',
+      urgency: 'Immediate',
+      event: 'Severe Thunderstorm Warning',
+      sender: 'W-NWS-NWSTG-2',
+      senderName: 'NWS Fort Worth TX',
+      headline: 'Severe Thunderstorm Warning for North Texas',
+      description: 'Severe thunderstorms are approaching North Texas with large hail up to golf ball size and damaging winds up to 70 mph. Heavy rain and frequent lightning are also expected.',
+      instruction: 'Move indoors immediately. Stay away from windows. Secure outdoor objects that could be blown away. Avoid using landline phones during the storm.',
+      messageType: 'Alert',
+      certainty: 'Observed',
+      url: 'https://weather.gov/fwd/thunderstorm',
+      effective: new Date(Date.now()).toISOString(),
+      onset: new Date(Date.now()).toISOString(),
+      expires: new Date(Date.now() + 3600000).toISOString(),
+      sent: new Date(Date.now()).toISOString(),
+      status: 'Actual',
+      notification: 'NWS',
+      references: [],
+    },
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-97.449, 32.889],
+          [-96.528, 32.889],
+          [-96.528, 33.496],
+          [-97.449, 33.496],
+          [-97.449, 32.889],
+        ],
+      ],
+    },
+  },
+  // Heat Advisory example
+  {
+    id: 'mock-heat-1',
+    type: 'Feature',
+    properties: {
+      '@id': 'https://api.weather.gov/alerts/mock-heat-1',
+      '@type': 'wx:Alert',
+      id: 'mock-heat-1',
+      areaDesc: 'Phoenix, Maricopa, Pinal, Yavapai, AZ',
+      category: 'Met',
+      response: 'Prepare',
+      severity: 'Moderate',
+      urgency: 'Expected',
+      event: 'Excessive Heat Warning',
+      sender: 'W-NWS-NWSTG-12',
+      senderName: 'NWS Phoenix AZ',
+      headline: 'Excessive Heat Warning for Arizona',
+      description: 'Dangerous heat conditions are expected across Arizona with temperatures reaching 115-120 degrees. Heat index values could approach 125 degrees. This heat could be life-threatening, especially for vulnerable populations.',
+      instruction: 'Stay indoors in air-conditioned spaces as much as possible. Drink plenty of water and avoid strenuous outdoor activities. Check on elderly family members and neighbors.',
+      messageType: 'Alert',
+      certainty: 'Likely',
+      url: 'https://weather.gov/phx/heat',
+      effective: new Date(Date.now()).toISOString(),
+      onset: new Date(Date.now() + 7200000).toISOString(),
+      expires: new Date(Date.now() + 259200000).toISOString(),
+      sent: new Date(Date.now()).toISOString(),
+      status: 'Actual',
+      notification: 'NWS',
+      references: [],
+    },
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-112.338, 32.846],
+          [-111.084, 32.846],
+          [-111.084, 34.386],
+          [-112.338, 34.386],
+          [-112.338, 32.846],
+        ],
+      ],
+    },
+  },
 ];
 
 // Function to get mock alerts by state
 export function getMockAlertsByState(state: string): WeatherAlert[] {
-  return mockWinterAlerts.filter(alert => 
+  return mockAllAlerts.filter(alert => 
     alert.properties.areaDesc.includes(state)
   );
 }
 
-// Function to get all mock winter alerts
-export function getAllMockWinterAlerts(): WeatherAlert[] {
-  return mockWinterAlerts;
+// Function to get all mock alerts
+export function getAllMockAlerts(): WeatherAlert[] {
+  return mockAllAlerts;
 }
 
 // Function to simulate random alert updates
 export function getRandomMockAlerts(count: number = 3): WeatherAlert[] {
-  const shuffled = [...mockWinterAlerts].sort(() => 0.5 - Math.random());
+  const shuffled = [...mockAllAlerts].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 }

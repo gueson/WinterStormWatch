@@ -3,8 +3,9 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'Accessibility Statement',
-  description: 'Our commitment to making WinterStormWatch accessible to all users, including those with disabilities.',
+  title: 'Accessibility Statement | WeatherAlert',
+  description: 'Our commitment to making WeatherAlert accessible to all users, including those with disabilities. WCAG 2.1 Level AA compliant.',
+  keywords: ['accessibility', 'WCAG', 'screen reader', 'keyboard navigation', 'accessible website'],
   alternates: {
     canonical: 'https://www.winterstormwatch.online/accessibility',
   },
@@ -29,7 +30,7 @@ export default function AccessibilityPage() {
           <section className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Commitment</h2>
             <p className="text-gray-700 mb-4">
-              WinterStormWatch is committed to ensuring digital accessibility for people with disabilities. We continually improve the user experience for everyone and apply relevant accessibility standards.
+              WeatherAlert is committed to ensuring digital accessibility for people with disabilities. We continually improve the user experience for everyone and apply relevant accessibility standards.
             </p>
           </section>
 
@@ -40,7 +41,7 @@ export default function AccessibilityPage() {
             </p>
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
               <p className="text-green-800">
-                <strong>Status:</strong> WinterStormWatch is designed to conform with WCAG 2.1 Level AA.
+                <strong>Status:</strong> WeatherAlert is designed to conform with WCAG 2.1 Level AA.
               </p>
             </div>
           </section>
@@ -165,7 +166,7 @@ export default function AccessibilityPage() {
           <section className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Assistive Technologies</h2>
             <p className="text-gray-700 mb-4">
-              WinterStormWatch is tested with various assistive technologies, including:
+              WeatherAlert is tested with various assistive technologies, including:
             </p>
             <ul className="list-disc pl-6 text-gray-700 space-y-2">
               <li>Screen readers (NVDA, JAWS, VoiceOver, TalkBack)</li>
@@ -178,7 +179,7 @@ export default function AccessibilityPage() {
           <section className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Feedback</h2>
             <p className="text-gray-700 mb-4">
-              We welcome your feedback on the accessibility of WinterStormWatch. Please let us know if you encounter accessibility barriers:
+              We welcome your feedback on the accessibility of WeatherAlert. Please let us know if you encounter accessibility barriers:
             </p>
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-gray-700">

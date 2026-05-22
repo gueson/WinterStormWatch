@@ -45,7 +45,7 @@ export function Footer() {
                   href="/city-tools"
                   className="text-sm hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
                 >
-                  City Winter Tools
+                  City Weather Tools
                 </Link>
               </li>
               <li>

@@ -1,100 +1,49 @@
 import { WeatherAlert, AlertsResponse } from '@/types/weather';
 
 const NWS_API_BASE = 'https://api.weather.gov';
-// NWS API requires a valid User-Agent with contact information
-const USER_AGENT = 'WeatherAlert/1.0 support@winterstormwatch.online';
-
-interface FetchOptions {
-  method?: string;
-  headers?: Record<string, string>;
-  next?: { revalidate: number };
-  cache?: RequestCache;
-}
+const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 WeatherAlert/1.0 (support@winterstormwatch.online)';
 
 async function fetchFromNWS<T>(endpoint: string): Promise<T> {
-  try {
-    const options: FetchOptions = {
-      headers: {
-        'User-Agent': USER_AGENT,
-        'Accept': 'application/geo+json',
-        'Accept-Charset': 'utf-8',
-        'Accept-Encoding': 'gzip, deflate, br',
-      },
-      // Cache strategy: revalidate every 5 minutes
-      next: { revalidate: 300 },
-    };
+  const options: RequestInit = {
+    headers: {
+      'User-Agent': USER_AGENT,
+      'Accept': 'application/geo+json',
+      'Accept-Charset': 'utf-8',
+      'Accept-Encoding': 'identity',
+    },
+    cache: 'no-store',
+  };
 
-    // Only log in development mode
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Fetching NWS API: ${NWS_API_BASE}${endpoint}`);
+  const response = await fetch(`${NWS_API_BASE}${endpoint}`, options);
+
+  if (!response.ok) {
+    let errorMsg = `NWS API error: ${response.status} ${response.statusText}`;
+    
+    if (response.status === 403) {
+      errorMsg += ' - Forbidden (check User-Agent configuration)';
+    } else if (response.status >= 500) {
+      errorMsg += ' - Server error (try again later)';
     }
     
-    const response = await fetch(`${NWS_API_BASE}${endpoint}`, options);
-    
-    if (!response.ok) {
-      // Detailed error message based on status code
-      let errorMsg = `NWS API error: ${response.status} ${response.statusText}`;
-      
-      if (response.status === 400) {
-        errorMsg += ' - Invalid request parameters or endpoint';
-        // Try to get more details from response
-        try {
-          const errorData = await response.json();
-          if (process.env.NODE_ENV === 'development') {
-            console.error('NWS API Error Details:', errorData);
-          }
-          errorMsg += ` - ${JSON.stringify(errorData)}`;
-        } catch (e) {
-          // Ignore if we can't parse error response
-        }
-      } else if (response.status === 403) {
-        errorMsg += ' - Forbidden (check User-Agent configuration)';
-      } else if (response.status === 404) {
-        errorMsg += ' - Endpoint not found';
-      } else if (response.status >= 500) {
-        errorMsg += ' - Server error (try again later)';
-      }
-      
-      throw new Error(errorMsg);
-    }
-    
-    // Parse response
-    const data = await response.json();
-    
-    // Only log in development mode
-    if (process.env.NODE_ENV === 'development') {
-      console.log('NWS API Data Received:', {
-        featuresCount: data.features?.length || 0,
-        updated: data.updated,
-      });
-    }
-    
-    return data;
-  } catch (error) {
-    // Only log in development mode
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Detailed NWS API Error:', error);
-    }
-    throw error;
+    throw new Error(errorMsg);
   }
+  
+  return response.json();
 }
 
 export async function getActiveAlerts(): Promise<WeatherAlert[]> {
   try {
-    // Try the correct NWS API endpoint format based on research
-    // Using v2 alerts endpoint which is more reliable
     const data = await fetchFromNWS<AlertsResponse>('/alerts/active');
-    return data.features;
-  } catch (error) {
-    console.error('Error fetching active alerts:', error);
-    // Try alternative endpoint if first one fails
-    try {
-      console.log('Trying alternative NWS API endpoint...');
-      const data = await fetchFromNWS<AlertsResponse>('/alerts/active/area/US');
+    
+    if (data && data.features && data.features.length > 0) {
       return data.features;
-    } catch (alternativeError) {
-      console.error('Alternative endpoint also failed:', alternativeError);
-      // Return empty array on error to maintain app functionality
+    }
+    return [];
+  } catch {
+    try {
+      const data = await fetchFromNWS<AlertsResponse>('/alerts/active/area/US');
+      return data && data.features && data.features.length > 0 ? data.features : [];
+    } catch {
       return [];
     }
   }
@@ -102,33 +51,15 @@ export async function getActiveAlerts(): Promise<WeatherAlert[]> {
 
 export async function getAlertsByState(state: string): Promise<WeatherAlert[]> {
   try {
-    // Correct endpoint format for state-specific alerts
     const data = await fetchFromNWS<AlertsResponse>(`/alerts/active/area/${state}`);
-    return data.features;
-  } catch (error) {
-    console.error(`Error fetching alerts for ${state}:`, error);
+    return data.features || [];
+  } catch {
     return [];
   }
 }
 
-export function filterWinterAlerts(alerts: WeatherAlert[]): WeatherAlert[] {
-  const winterKeywords = [
-    'Winter Storm',
-    'Winter Weather',
-    'Blizzard',
-    'Winter Mix',
-    'Snow',
-    'Ice',
-    'Freezing',
-    'Sleet',
-    'Frost',
-  ];
-
-  return alerts.filter((alert) =>
-    winterKeywords.some((keyword) => 
-      alert.properties.event.toLowerCase().includes(keyword.toLowerCase())
-    )
-  );
+export function filterAllAlerts(alerts: WeatherAlert[]): WeatherAlert[] {
+  return alerts;
 }
 
 export function groupAlertsByState(alerts: WeatherAlert[]): Record<string, WeatherAlert[]> {
@@ -143,7 +74,6 @@ export function groupAlertsByState(alerts: WeatherAlert[]): Record<string, Weath
 }
 
 function extractStateFromArea(areaDesc: string): string {
-  // Improved state extraction regex
   const stateMatch = areaDesc.match(/\b([A-Z]{2})\b(?!.*[A-Z]{2})/);
   return stateMatch ? stateMatch[1] : 'Unknown';
 }
