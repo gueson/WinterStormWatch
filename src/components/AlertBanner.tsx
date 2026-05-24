@@ -30,10 +30,10 @@ export function AlertBanner({ alertCount, lastUpdated }: AlertBannerProps) {
           </div>
           <div className="flex-1">
             <h2 className="text-xl font-bold text-green-800 mb-1">
-              No Active Winter Storm Alerts
+              No Active Weather Alerts
             </h2>
             <p className="text-green-700">
-              Currently, there are no active winter storm watches, warnings, or advisories for the United States.
+              Currently, there are no active weather watches, warnings, or advisories for the United States.
             </p>
           </div>
           <p className="text-sm text-green-600 whitespace-nowrap">
@@ -67,10 +67,10 @@ export function AlertBanner({ alertCount, lastUpdated }: AlertBannerProps) {
         </div>
         <div className="flex-1">
           <h2 className="text-xl font-bold text-red-800 mb-1">
-            {alertCount} Active Winter Storm Alert{alertCount !== 1 ? 's' : ''}
+            {alertCount} Active Weather Alert{alertCount !== 1 ? 's' : ''}
           </h2>
           <p className="text-red-700">
-            Winter storm watches, warnings, or advisories are currently in effect for parts of the United States.
+            Weather watches, warnings, or advisories are currently in effect for parts of the United States.
             Take precautions and stay informed.
           </p>
         </div>

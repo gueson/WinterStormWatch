@@ -64,57 +64,74 @@ export default function Home() {
     const fetchAlerts = async () => {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
-        const cacheData = JSON.parse(cached);
-        if (Date.now() - cacheData.timestamp < CACHE_TTL) {
-          setAllAlertsData(cacheData.data);
-          setDataSource('nws-api');
-          setIsLoading(false);
-          return;
+        try {
+          const cacheData = JSON.parse(cached);
+          if (Date.now() - cacheData.timestamp < CACHE_TTL) {
+            setAllAlertsData(cacheData.data);
+            setDataSource('nws-api');
+            setIsLoading(false);
+            return;
+          }
+        } catch {
+          localStorage.removeItem(CACHE_KEY);
         }
       }
       
-      const NWS_API_BASE = 'https://api.weather.gov';
-      const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 WeatherAlert/1.0';
+      const USER_AGENT = 'WeatherAlert/1.0 (support@winterstormwatch.online)';
+      const NWS_ENDPOINTS = [
+        'https://api.weather.gov/alerts/active',
+        'https://api.weather.gov/alerts/active/area/US',
+      ];
       
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
-        
-        const response = await fetch(`${NWS_API_BASE}/alerts/active`, {
-          headers: {
-            'User-Agent': USER_AGENT,
-            'Accept': 'application/geo+json',
-          },
-          signal: controller.signal,
-        });
-        
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+      let lastError: string | null = null;
+      
+      for (const endpoint of NWS_ENDPOINTS) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000);
+          
+          const response = await fetch(endpoint, {
+            headers: {
+              'User-Agent': USER_AGENT,
+              'Accept': 'application/geo+json',
+              'Accept-Charset': 'utf-8',
+            },
+            signal: controller.signal,
+            cache: 'no-store',
+          });
+          
+          clearTimeout(timeoutId);
+          
+          if (!response.ok) {
+            lastError = `HTTP error ${response.status}: ${response.statusText}`;
+            continue;
+          }
+          
+          const data = await response.json();
+          
+          if (data.features && data.features.length > 0) {
+            const alerts = filterAllAlerts(data.features);
+            setAllAlertsData(alerts);
+            setDataSource('nws-api');
+            setError(null);
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+              data: alerts,
+              timestamp: Date.now()
+            }));
+            setIsLoading(false);
+            return;
+          } else {
+            lastError = 'No alerts found from NWS API';
+          }
+        } catch (err) {
+          lastError = err instanceof Error ? err.message : 'Unknown error';
         }
-        
-        const data = await response.json();
-        
-        if (data.features && data.features.length > 0) {
-          const alerts = filterAllAlerts(data.features);
-          setAllAlertsData(alerts);
-          setDataSource('nws-api');
-          localStorage.setItem(CACHE_KEY, JSON.stringify({
-            data: alerts,
-            timestamp: Date.now()
-          }));
-        } else {
-          setAllAlertsData(mockAllAlerts);
-          setDataSource('mock-data');
-        }
-      } catch {
-        setError('Failed to fetch real-time data');
-        setAllAlertsData(mockAllAlerts);
-        setDataSource('mock-data');
-      } finally {
-        setIsLoading(false);
       }
+      
+      setError(lastError || 'Failed to fetch real-time data from NWS API');
+      setAllAlertsData(mockAllAlerts);
+      setDataSource('mock-data');
+      setIsLoading(false);
     };
     
     fetchAlerts();
@@ -201,7 +218,7 @@ export default function Home() {
         <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
           <div className="flex flex-col items-center justify-center py-16">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-            <p className="text-gray-600">Loading weather alerts...</p>
+            <p className="text-gray-600">Loading weather alerts from National Weather Service...</p>
           </div>
         </main>
         <Footer />
@@ -228,7 +245,7 @@ export default function Home() {
       <main id="main-content" className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         <div className="mb-4 text-right">
           <span 
-            className="inline-flex items-center text-xs font-medium px-3 py-1 rounded-full bg-blue-100 text-blue-800"
+            className={`inline-flex items-center text-xs font-medium px-3 py-1 rounded-full ${dataSource === 'nws-api' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}
             aria-live="polite"
           >
             <span className="sr-only">Data source:</span>
@@ -248,7 +265,21 @@ export default function Home() {
         
         {error && (
           <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-yellow-800 text-sm">⚠️ {error}</p>
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <p className="text-yellow-800 font-medium">Unable to fetch real-time data</p>
+                <p className="text-yellow-700 text-sm mt-1">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="mt-2 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                >
+                  Try again
+                </button>
+              </div>
+            </div>
           </div>
         )}
 

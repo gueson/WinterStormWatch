@@ -17,29 +17,29 @@ const CITY_LOCAL_TIPS: Record<string, LocalTip[]> = {
   'dallas': [
     {
       id: 'dallas-travel-1',
-      title: 'Navigating Dallas Freeways in Snow',
-      content: 'Avoid I-35 during heavy snowfall - it tends to ice over quickly. Stick to surface streets when possible, and allow twice the usual travel time.',
+      title: 'Navigating Dallas Weather Conditions',
+      content: 'Watch for severe weather alerts including thunderstorms, flooding, and winter weather. Stick to surface streets when possible, and allow extra travel time during adverse conditions.',
       category: 'travel',
       source: 'Dallas Resident'
     },
     {
       id: 'dallas-heating-1',
-      title: 'Winter Heating Tips for Dallas Homes',
-      content: 'Many Dallas homes have heat pumps that struggle in extreme cold. Keep thermostat set to 68°F to avoid overworking your system, and seal windows with plastic film for extra insulation.',
+      title: 'Home Preparation for All Seasons',
+      content: 'Keep your HVAC system well-maintained year-round. During extreme heat or cold, set your thermostat to 68-72°F to avoid overworking your system.',
       category: 'heating',
       source: 'Dallas HVAC Expert'
     },
     {
       id: 'dallas-safety-1',
-      title: 'Preventing Frozen Pipes',
-      content: 'Let faucets drip slightly during freezing temperatures, especially for pipes on exterior walls. Open cabinet doors under sinks to allow warm air circulation.',
+      title: 'Preventing Weather-Related Issues',
+      content: 'Let faucets drip slightly during freezing temperatures. During storms, stay indoors and away from windows.',
       category: 'safety',
-      source: 'Dallas Plumber'
+      source: 'Dallas Emergency Services'
     },
     {
       id: 'dallas-preparation-1',
-      title: 'Winter Storm Grocery List',
-      content: 'Stock up on non-perishable foods, bottled water, and essential medications before the storm hits. Many Dallas grocery stores sell out quickly when snow is forecasted.',
+      title: 'Emergency Grocery List',
+      content: 'Always keep 3 days of non-perishable foods, bottled water, and essential medications on hand. Dallas stores often sell out quickly when severe weather is forecasted.',
       category: 'preparation',
       source: 'Dallas Resident'
     },
@@ -47,22 +47,22 @@ const CITY_LOCAL_TIPS: Record<string, LocalTip[]> = {
   'san-antonio': [
     {
       id: 'sa-travel-1',
-      title: 'Driving in San Antonio Ice',
-      content: 'San Antonio roads rarely see ice, so they freeze quickly. Avoid bridges and overpasses which ice before surface streets. Keep a bag of kitty litter in your trunk for traction.',
+      title: 'Driving in San Antonio Weather',
+      content: 'San Antonio sees a variety of weather from flooding to occasional ice. Avoid low-water crossings during storms and bridges/overpasses in winter weather.',
       category: 'travel',
       source: 'San Antonio Resident'
     },
     {
       id: 'sa-heating-1',
-      title: 'Heating Your San Antonio Home',
-      content: 'Many older San Antonio homes have inefficient heating systems. Layer up with warm clothing to reduce heating costs, and use space heaters safely (keep 3 feet from flammables).',
+      title: 'Year-Round Home Comfort',
+      content: 'Maintain your heating and cooling systems. Layer clothing during cold snaps and use fans during heat waves for energy efficiency.',
       category: 'heating',
       source: 'San Antonio Energy Expert'
     },
     {
       id: 'sa-safety-1',
       title: 'Power Outage Safety',
-      content: 'Have flashlights and batteries ready - San Antonio often experiences power outages during winter storms. Avoid using generators indoors due to carbon monoxide risk.',
+      content: 'Have flashlights and batteries ready - San Antonio experiences outages during storms. Avoid using generators indoors due to carbon monoxide risk.',
       category: 'safety',
       source: 'San Antonio Fire Department'
     },
@@ -70,22 +70,22 @@ const CITY_LOCAL_TIPS: Record<string, LocalTip[]> = {
   'chicago': [
     {
       id: 'chicago-travel-1',
-      title: 'Chicago Winter Driving',
-      content: 'Invest in good snow tires - they make a huge difference on Chicago streets. Keep your gas tank at least half full to prevent fuel line freezing.',
+      title: 'Chicago Weather Driving',
+      content: 'Be prepared for all types of weather - from summer storms to winter snow. Invest in good tires appropriate for the season and keep your gas tank at least half full.',
       category: 'travel',
       source: 'Chicago Resident'
     },
     {
       id: 'chicago-preparation-1',
-      title: 'Winterizing Your Chicago Home',
-      content: 'Clean gutters before winter to prevent ice dams. Insulate pipes in unheated areas like basements and attics.',
+      title: 'Seasonal Home Maintenance',
+      content: 'Clean gutters before storm season, insulate pipes in winter, and service your air conditioning before summer.',
       category: 'preparation',
       source: 'Chicago Home Inspector'
     },
     {
       id: 'chicago-community-1',
-      title: 'Chicago Winter Community Tips',
-      content: 'Check on elderly neighbors during extreme cold. Many Chicago communities have warming centers open during severe weather.',
+      title: 'Chicago Community Support',
+      content: 'Check on elderly neighbors during extreme weather. Many Chicago communities have resources available during severe conditions.',
       category: 'community',
       source: 'Chicago Community Leader'
     },
@@ -94,29 +94,29 @@ const CITY_LOCAL_TIPS: Record<string, LocalTip[]> = {
   'default': [
     {
       id: 'generic-travel-1',
-      title: 'Safe Winter Driving Tips',
-      content: 'Reduce speed, increase following distance, and avoid sudden stops. Use winter tires if available, and keep an emergency kit in your vehicle.',
+      title: 'Safe Weather Driving Tips',
+      content: 'Reduce speed, increase following distance, and avoid sudden stops during adverse conditions. Keep an emergency kit in your vehicle year-round.',
       category: 'travel',
-      source: 'Winter Driving Expert'
+      source: 'Driving Safety Expert'
     },
     {
       id: 'generic-heating-1',
-      title: 'Efficient Home Heating',
-      content: 'Set thermostat to 68°F during the day and lower at night. Seal drafts around windows and doors to save energy.',
+      title: 'Home Comfort & Efficiency',
+      content: 'Maintain comfortable temperatures and seal drafts around windows and doors to save energy year-round.',
       category: 'heating',
       source: 'Energy Efficiency Expert'
     },
     {
       id: 'generic-safety-1',
-      title: 'Carbon Monoxide Safety',
-      content: 'Install carbon monoxide detectors on every level of your home, especially near bedrooms. Test them monthly.',
+      title: 'Home Safety Tips',
+      content: 'Install and test smoke and carbon monoxide detectors on every level of your home, especially near bedrooms.',
       category: 'safety',
       source: 'Fire Safety Expert'
     },
     {
       id: 'generic-preparation-1',
-      title: 'Winter Emergency Kit',
-      content: 'Prepare a kit with water, food, flashlights, batteries, first aid supplies, and medications to last at least 3 days.',
+      title: 'Year-Round Emergency Kit',
+      content: 'Prepare a kit with water, food, flashlights, batteries, first aid supplies, and medications to last at least 3 days for any emergency.',
       category: 'preparation',
       source: 'Emergency Preparedness Specialist'
     },
@@ -126,7 +126,7 @@ const CITY_LOCAL_TIPS: Record<string, LocalTip[]> = {
 // 分类标签映射
 const CATEGORY_LABELS: Record<LocalTip['category'], string> = {
   'travel': 'Travel Tips',
-  'heating': 'Heating Tips',
+  'heating': 'Home Comfort',
   'safety': 'Safety Tips',
   'preparation': 'Preparation Tips',
   'community': 'Community Tips',
@@ -135,7 +135,7 @@ const CATEGORY_LABELS: Record<LocalTip['category'], string> = {
 // 分类图标映射
 const CATEGORY_ICONS: Record<LocalTip['category'], string> = {
   'travel': '🚗',
-  'heating': '🔥',
+  'heating': '🏠',
   'safety': '🛡️',
   'preparation': '📋',
   'community': '🤝',
@@ -157,7 +157,7 @@ export const LocalTips: React.FC = () => {
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-4">Local Winter Tips for {selectedCity.name}</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-4">Local Tips for {selectedCity.name}</h2>
       
       <div className="grid grid-cols-1 gap-6">
         {Object.entries(groupedTips).map(([category, categoryTips]) => (
@@ -198,7 +198,7 @@ export const LocalTips: React.FC = () => {
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4">
             <h4 className="font-medium text-gray-900 mb-2">🏘️ Neighborhood Associations</h4>
-            <p className="text-sm text-gray-600">Check with your neighborhood association for community warming centers and volunteer opportunities during winter storms.</p>
+            <p className="text-sm text-gray-600">Check with your neighborhood association for community resources and volunteer opportunities during severe weather events.</p>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4">
             <h4 className="font-medium text-gray-900 mb-2">📱 Local Alert Apps</h4>

@@ -11,19 +11,19 @@ export function Footer() {
             <Link
               href="/"
               className="flex items-center gap-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded p-2"
-              aria-label="Winter Storm Watch - Home"
+              aria-label="WeatherAlert - Home"
             >
               <div className="w-12 h-10 bg-blue-600 text-white font-bold text-center flex items-center justify-center rounded">
-                WSW
+                WA
               </div>
-              <span className="text-xl font-bold text-white">winterstormwatch</span>
+              <span className="text-xl font-bold text-white">WeatherAlert</span>
             </Link>
             <p className="text-sm text-gray-400 mb-4 max-w-md">
-              Real-time winter storm alerts and safety information for the United States.
+              Real-time weather alerts and safety information for all seasonal hazards across the United States.
               Data sourced from the National Weather Service (NWS).
             </p>
             <p className="text-xs text-gray-500">
-              © {currentYear} WinterStormWatch. All rights reserved.
+              © {currentYear} WeatherAlert. All rights reserved.
             </p>
           </div>
 
